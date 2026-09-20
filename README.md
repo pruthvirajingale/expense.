@@ -29,4 +29,6 @@ Install Node.js, then:
 
 Open http://localhost:3000
 
+For installation on a phone, open the app from `https://` or a local development hostname such as `localhost`. Browsers do not allow PWA installation from a plain `http://` LAN address such as `http://192.168.x.x:3000`. When the browser supports installation, use the **Install** button in the app or the browser's install menu.
+
 All financial data remains in browser localStorage; there is no backend database.

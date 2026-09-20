@@ -11,9 +11,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <title>expense. — Personal Money OS</title>
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
-    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -1014,6 +1014,16 @@ body {
       <header class="top">
         <div class="brand">expense<span>.</span></div>
         <div class="top-actions">
+          <button
+            class="btn install-btn"
+            id="installButton"
+            type="button"
+            hidden
+            onclick="installApp()"
+            aria-label="Install expense app"
+          >
+            Install
+          </button>
           <button class="btn export" onclick="exportCSV()">Export CSV</button>
           <button class="icon-btn" title="Settings" onclick="openSettings()">
   <svg
@@ -2432,9 +2442,31 @@ body {
       scheduleMidnight();
     </script>
     <script>
+      let deferredInstallPrompt = null;
+      const installButton = document.getElementById("installButton");
+
+      window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        deferredInstallPrompt = event;
+        installButton.hidden = false;
+      });
+
+      window.addEventListener("appinstalled", () => {
+        deferredInstallPrompt = null;
+        installButton.hidden = true;
+      });
+
+      async function installApp() {
+        if (!deferredInstallPrompt) return;
+        deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+        installButton.hidden = true;
+      }
+
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
-          navigator.serviceWorker.register("/sw.js").catch((error) => {
+          navigator.serviceWorker.register("sw.js").catch((error) => {
             console.error("Service worker registration failed", error);
           });
         });
