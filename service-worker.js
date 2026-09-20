@@ -1,11 +1,15 @@
-const CACHE = "expense-pwa-v3";
+const CACHE = "expense-pwa-v4";
 const BASE = self.registration.scope;
+const INDEX = new URL("index.html", BASE).href;
+const FONT_HOSTS = ["fonts.googleapis.com", "fonts.gstatic.com"];
+const NAV_TIMEOUT_MS = 3000;
+
+// App shell: everything needed to launch the app with no network.
 const ASSETS = [
-  BASE,
-  new URL("index.html", BASE).href,
+  INDEX,
   new URL("manifest.json", BASE).href,
-  new URL("icons/icon-192.png", BASE).href,
-  new URL("icons/icon-512.png", BASE).href,
+  new URL("icon-192.png", BASE).href,
+  new URL("icon-512.png", BASE).href,
 ];
 
 self.addEventListener("install", (event) => {
@@ -32,20 +36,58 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
+// Pages: try the network first so updates show up right away, but fall back
+// to the cached app shell when offline or when the network is too slow.
+async function handleNavigation() {
+  const cache = await caches.open(CACHE);
+  try {
+    const response = await Promise.race([
+      fetch(INDEX, { cache: "no-cache" }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("timeout")), NAV_TIMEOUT_MS),
+      ),
+    ]);
+    if (response.ok) cache.put(INDEX, response.clone());
+    return response;
+  } catch (error) {
+    const cached = await cache.match(INDEX);
+    return cached || Response.error();
+  }
+}
 
-  event.respondWith(
-    caches.match(event.request).then(
-      (cachedResponse) =>
-        cachedResponse ||
-        fetch(event.request)
-          .then((response) => {
-            const copy = response.clone();
-            caches.open(CACHE).then((cache) => cache.put(event.request, copy));
-            return response;
-          })
-          .catch(() => caches.match(new URL("index.html", BASE).href)),
-    ),
-  );
+// Everything else: serve from cache instantly and refresh it in the background.
+async function staleWhileRevalidate(event) {
+  const cache = await caches.open(CACHE);
+  const cached = await cache.match(event.request);
+  const network = fetch(event.request)
+    .then((response) => {
+      // Opaque responses come from cross-origin <link> requests (Google Fonts CSS).
+      if (response.ok || response.type === "opaque") {
+        cache.put(event.request, response.clone());
+      }
+      return response;
+    })
+    .catch(() => undefined);
+
+  if (cached) {
+    event.waitUntil(network);
+    return cached;
+  }
+  return (await network) || Response.error();
+}
+
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
+  if (request.method !== "GET") return;
+
+  const url = new URL(request.url);
+
+  if (request.mode === "navigate") {
+    event.respondWith(handleNavigation());
+    return;
+  }
+
+  if (url.origin === self.location.origin || FONT_HOSTS.includes(url.hostname)) {
+    event.respondWith(staleWhileRevalidate(event));
+  }
 });

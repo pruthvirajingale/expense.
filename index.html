@@ -6,15 +6,20 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
-    <meta name="theme-color" content="#0e1012" />
+    <meta name="theme-color" content="#08090b" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="expense." />
+    <meta
+      name="description"
+      content="Local-first expense tracking, daily budgets, income and buying goals."
+    />
     <title>expense. — Personal Money OS</title>
     <link rel="manifest" href="manifest.json" />
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
-    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -23,7 +28,7 @@
     />
     <style>
      :root {
-  --bg: #0e1012;
+  --bg: #08090b;
   --surface: #15181b;
   --surface2: #1e2226;
   --surface3: #272c31;
@@ -55,6 +60,10 @@
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+}
+
+[hidden] {
+  display: none !important;
 }
 
 html {
@@ -1019,6 +1028,7 @@ body {
             class="btn install-btn"
             id="installButton"
             type="button"
+            hidden
             onclick="installApp()"
             aria-label="Install expense app"
           >
@@ -2444,11 +2454,21 @@ body {
     <script>
       let deferredInstallPrompt = null;
       const installButton = document.getElementById("installButton");
+      const isStandalone = () =>
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true;
+      const isIOS =
+        /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+      // iOS never fires beforeinstallprompt, so show the button (which explains
+      // Add to Home Screen) whenever the app isn't already installed.
+      if (isIOS && !isStandalone()) installButton.hidden = false;
 
       window.addEventListener("beforeinstallprompt", (event) => {
         event.preventDefault();
         deferredInstallPrompt = event;
-        installButton.hidden = false;
+        if (!isStandalone()) installButton.hidden = false;
       });
 
       window.addEventListener("appinstalled", () => {
@@ -2459,7 +2479,9 @@ body {
       async function installApp() {
         if (!deferredInstallPrompt) {
           toast(
-            "Use your browser menu to install this app. On iPhone, choose Share, then Add to Home Screen.",
+            isIOS
+              ? "On iPhone, tap Share, then Add to Home Screen."
+              : "Use your browser menu to install this app.",
           );
           return;
         }

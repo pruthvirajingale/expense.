@@ -22,6 +22,19 @@ Built from the uploaded Perplexity-style expense tracker and expanded into a loc
 ## Daily budget behavior
 If the daily budget is ₹150 and you spend ₹110, ₹40 is recorded as that day's available goal funding. The allocation is stored once for that date so refreshing the app does not create money repeatedly.
 
+## Project layout
+Everything lives in one flat folder, including the app icons:
+
+    index.html
+    manifest.json
+    service-worker.js
+    icon-192.png
+    icon-512.png
+    server.js       (local dev server)
+    vercel.json     (deploy headers)
+
+Offline behaviour: pages load network-first (so updates appear immediately) with the cached app shell as fallback; other assets are served from cache and refreshed in the background. If you rename or add files the app needs offline, add them to `ASSETS` in `service-worker.js` and bump `CACHE`.
+
 ## Run
 Install Node.js, then:
 
