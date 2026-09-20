@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
-    <meta name="theme-color" content="#e7e8e6" />
+    <meta name="theme-color" content="#000000" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -22,15 +22,15 @@
     />
     <style>
      :root {
-  --bg: #e7e8e6;
-  --surface: #f2f3f1;
-  --surface2: #e1e3e1;
-  --surface3: #d8dbd9;
-  --border: #cfd2cf;
-  --border2: #b9bfbb;
-  --text: #202522;
-  --muted: #66706a;
-  --dim: #89918c;
+  --bg: #000000;
+  --surface: #000000;
+  --surface2: #0a0a0a;
+  --surface3: #121212;
+  --border: #1a1a1a;
+  --border2: #262626;
+  --text: #ffffff;
+  --muted: #8e8e93;
+  --dim: #55555c;
   
   /* Matches logo cyan shift */
   --accent: #00f2fe;
@@ -42,7 +42,7 @@
   --purple: #9d81ff;
   --yellow: #f6c75b;
   
-  --shadow: 0 24px 70px rgba(32, 37, 34, 0.14);
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.85);
   --r-xl: 24px;
   --r-lg: 18px;
   --r-md: 14px;
@@ -307,7 +307,7 @@ body {
         border-radius: var(--r-xl);
         overflow: hidden;
         margin-bottom: 16px;
-        box-shadow: 0 14px 40px rgba(32, 37, 34, 0.1);
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
       }
       .panel-head {
         min-height: 74px;
@@ -651,7 +651,7 @@ body {
         align-items: center;
         justify-content: center;
         padding: 18px;
-        background: rgba(32, 37, 34, 0.36);
+        background: rgba(0, 0, 0, 0.85);
         backdrop-filter: blur(13px);
       }
       .modal.show {
@@ -1018,7 +1018,6 @@ body {
             class="btn install-btn"
             id="installButton"
             type="button"
-            hidden
             onclick="installApp()"
             aria-label="Install expense app"
           >
@@ -2457,7 +2456,12 @@ body {
       });
 
       async function installApp() {
-        if (!deferredInstallPrompt) return;
+        if (!deferredInstallPrompt) {
+          toast(
+            "Use your browser menu to install this app. On iPhone, choose Share, then Add to Home Screen.",
+          );
+          return;
+        }
         deferredInstallPrompt.prompt();
         await deferredInstallPrompt.userChoice;
         deferredInstallPrompt = null;
