@@ -1,0 +1,2443 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <title>expense. — Personal Money OS</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+     :root {
+  --bg: #000000;
+  --surface: #000000;
+  --surface2: #0a0a0a;
+  --surface3: #121212;
+  --border: #1a1a1a;
+  --border2: #262626;
+  --text: #ffffff;
+  --muted: #8e8e93;
+  --dim: #55555c;
+  
+  /* Matches logo cyan shift */
+  --accent: #00f2fe;
+  --accent2: #00b4d8;
+  
+  /* Matches logo accent colors */
+  --green: #25f4b9;
+  --red: #ff214f;
+  --purple: #9d81ff;
+  --yellow: #f6c75b;
+  
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.85);
+  --r-xl: 24px;
+  --r-lg: 18px;
+  --r-md: 14px;
+  --r-sm: 10px;
+  --pill: 999px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: #000000;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    "Manrope",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-synthesis: none;
+  letter-spacing: -0.012em;
+  padding-bottom: 72px;
+}
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+        color: inherit;
+      }
+      button {
+        border: 0;
+        background: none;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      input,
+      select,
+      textarea {
+        outline: none;
+      }
+      ::selection {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      ::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1a1a1a;
+        border-radius: 99px;
+      }
+      .app {
+        width: min(1080px, 100%);
+        margin: auto;
+        padding: 26px 18px;
+      }
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 22px;
+      }
+      .brand {
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: -0.055em;
+      }
+      .brand span {
+        color: var(--accent);
+      }
+      .top-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .btn {
+        height: 38px;
+        padding: 0 14px;
+        border-radius: var(--pill);
+        border: 1px solid var(--border2);
+        background: var(--surface2);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+        transition: 0.2s var(--ease);
+      }
+      .btn:hover {
+        background: var(--surface3);
+        color: var(--text);
+        transform: translateY(-1px);
+      }
+      .btn:active {
+        transform: scale(0.97);
+      }
+      .btn.primary {
+        background: #ffffff;
+        color: #000000;
+        border-color: #ffffff;
+        box-shadow: 0 8px 24px rgba(255, 255, 255, 0.1);
+      }
+      .btn.danger {
+        color: var(--red);
+      }
+      .btn.small {
+        height: 32px;
+        padding: 0 11px;
+        font-size: 11px;
+      }
+      .icon-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+        border: 1px solid transparent;
+      }
+      .icon-btn:hover {
+        background: var(--surface2);
+        border-color: var(--border);
+        color: var(--text);
+      }
+      svg {
+        display: block;
+      }
+      .action-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .action-tile {
+        height: 78px;
+        border-radius: var(--r-lg);
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-size: 12px;
+        font-weight: 700;
+        transition: 0.2s var(--ease);
+      }
+      .action-tile:hover {
+        background: var(--surface3);
+        border-color: var(--border2);
+        transform: translateY(-1px);
+      }
+      .action-tile:active {
+        transform: scale(0.98);
+      }
+      .action-tile.primary {
+        background: #ffffff;
+        color: #000000;
+        border-color: #ffffff;
+        box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+      }
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .metric {
+        padding: 16px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r-lg);
+        cursor: pointer;
+        transition: 0.2s var(--ease);
+      }
+      .metric:hover {
+        border-color: var(--border2);
+        background: #0a0a0a;
+      }
+      .metric-label {
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.055em;
+        color: var(--muted);
+      }
+      .metric-value {
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        margin-top: 7px;
+      }
+      .metric-value.accent {
+        color: var(--accent);
+      }
+      .metric-value.green {
+        color: var(--green);
+      }
+      .metric-hint {
+        font-size: 10px;
+        color: var(--dim);
+        margin-top: 5px;
+      }
+      .tabs {
+        display: flex;
+        gap: 4px;
+        padding: 4px;
+        background: #000000;
+        border: 1px solid var(--border);
+        border-radius: var(--pill);
+        margin-bottom: 18px;
+        position: sticky;
+        top: 10px;
+        z-index: 20;
+        backdrop-filter: blur(18px);
+      }
+      .tab {
+        flex: 1;
+        height: 38px;
+        border-radius: var(--pill);
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--muted);
+        transition: 0.2s var(--ease);
+      }
+      .tab:hover {
+        color: var(--text);
+      }
+      .tab.active {
+        background: #ffffff;
+        color: #000000;
+        box-shadow: 0 5px 18px rgba(255, 255, 255, 0.1);
+      }
+      .view {
+        display: none;
+      }
+      .view.active {
+        display: block;
+      }
+      .panel {
+        background: #000000;
+        border: 1px solid var(--border);
+        border-radius: var(--r-xl);
+        overflow: hidden;
+        margin-bottom: 16px;
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+      }
+      .panel-head {
+        min-height: 74px;
+        padding: 17px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        border-bottom: 1px solid var(--border);
+      }
+      .panel-head h2 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+      }
+      .panel-head p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .panel-body {
+        padding: 20px;
+      }
+      .daily-main {
+        padding: 27px 32px 32px;
+      }
+      .daily-top {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      .daily-number {
+        font-size: 44px;
+        line-height: 1;
+        font-weight: 800;
+        letter-spacing: -0.065em;
+      }
+      .daily-label {
+        margin-top: 9px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .daily-status {
+        font-size: 13px;
+        color: var(--muted);
+        text-align: right;
+      }
+      .progress {
+        height: 9px;
+        background: #121212;
+        border-radius: 99px;
+        overflow: hidden;
+        margin: 22px 0 18px;
+      }
+      .progress > i {
+        display: block;
+        height: 100%;
+        width: 0;
+        border-radius: 99px;
+        background: var(--accent);
+        transition: width 0.45s var(--ease);
+      }
+      .progress > i.over {
+        background: var(--red);
+      }
+      .daily-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      .mini {
+        padding: 15px 16px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--r-lg);
+      }
+      .mini .k {
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--muted);
+        letter-spacing: 0.05em;
+      }
+      .mini .v {
+        margin-top: 6px;
+        font-size: 16px;
+        font-weight: 800;
+      }
+      .mini .v.red {
+        color: var(--red);
+      }
+      .mini .v.green {
+        color: var(--green);
+      }
+      .insights {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .insight {
+        padding: 16px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--r-lg);
+      }
+      .insight .title {
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .insight .big {
+        font-size: 19px;
+        font-weight: 800;
+        margin-top: 6px;
+      }
+      .insight .sub {
+        font-size: 10px;
+        color: var(--dim);
+        margin-top: 4px;
+      }
+      .account-grid,
+      .goal-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        padding: 16px;
+      }
+      .account {
+        padding: 16px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--r-lg);
+        position: relative;
+      }
+      .account .name {
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .account .bal {
+        font-size: 19px;
+        font-weight: 800;
+        margin-top: 5px;
+      }
+      .account .txcount {
+        font-size: 10px;
+        color: var(--dim);
+        margin-top: 7px;
+      }
+      .account .edit {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+      .goal {
+        padding: 17px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--r-lg);
+        position: relative;
+      }
+      .goal-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .goal-title {
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .goal-primary {
+        font-size: 9px;
+        color: var(--accent);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-top: 4px;
+      }
+      .goal-amount {
+        font-size: 18px;
+        font-weight: 800;
+        margin-top: 13px;
+      }
+      .goal-target {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .goal .progress {
+        margin: 12px 0 8px;
+        height: 7px;
+      }
+      .goal-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .empty {
+        min-height: 210px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        color: var(--muted);
+        padding: 35px;
+      }
+      .empty-icon {
+        width: 42px;
+        height: 42px;
+        border: 2px solid #222;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        margin: 0 auto 12px;
+        color: #777;
+      }
+      .empty strong {
+        display: block;
+        color: #9a9aa5;
+        font-size: 13px;
+      }
+      .empty span {
+        display: block;
+        font-size: 11px;
+        margin-top: 5px;
+      }
+      .toolbar {
+        display: flex;
+        gap: 8px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        flex-wrap: wrap;
+      }
+      .field-inline {
+        height: 36px;
+        padding: 0 12px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--pill);
+        font-size: 11px;
+        color: var(--text);
+      }
+      .toolbar input {
+        flex: 1;
+        min-width: 180px;
+      }
+      .field-inline:focus,
+      .form-control:focus {
+        border-color: #444444;
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 720px;
+      }
+      th,
+      td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        font-size: 12px;
+      }
+      th {
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--dim);
+      }
+      td {
+        color: #ddd;
+      }
+      .title-cell {
+        font-weight: 800;
+      }
+      .sub-cell {
+        font-size: 10px;
+        color: var(--dim);
+        margin-top: 3px;
+      }
+      .tag {
+        display: inline-flex;
+        padding: 4px 8px;
+        border: 1px solid var(--border);
+        border-radius: 99px;
+        background: var(--surface2);
+        font-size: 9px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .amount-income {
+        color: var(--green);
+        font-weight: 800;
+      }
+      .amount-expense {
+        font-weight: 800;
+      }
+      .analytics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 16px;
+      }
+      .bar-list {
+        display: grid;
+        gap: 12px;
+      }
+      .bar-row {
+        display: grid;
+        grid-template-columns: 85px 1fr 70px;
+        gap: 10px;
+        align-items: center;
+        font-size: 10px;
+      }
+      .bar-track {
+        height: 7px;
+        background: #121212;
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .bar-track i {
+        display: block;
+        height: 100%;
+        background: var(--accent);
+        border-radius: 99px;
+      }
+      .bar-value {
+        text-align: right;
+        color: var(--muted);
+      }
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(13px);
+      }
+      .modal.show {
+        display: flex;
+        animation: fade 0.18s ease;
+      }
+      .modal-box {
+        width: min(470px, 100%);
+        max-height: min(88vh, 720px);
+        overflow: auto;
+        padding: 23px;
+        background: #000000;
+        border: 1px solid var(--border2);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        animation: pop 0.22s var(--ease);
+      }
+      @keyframes fade {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes pop {
+        from {
+          opacity: 0;
+          transform: translateY(12px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .modal-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .modal-head h3 {
+        margin: 0;
+        font-size: 17px;
+      }
+      .modal-head p {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.5;
+      }
+      .form {
+        display: grid;
+        gap: 13px;
+        margin-top: 19px;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--muted);
+        font-weight: 800;
+      }
+      .form-control {
+        width: 100%;
+        height: 43px;
+        padding: 0 12px;
+        background: #0a0a0a;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        font-size: 12px;
+        color: var(--text);
+      }
+      textarea.form-control {
+        height: 80px;
+        padding: 11px;
+        resize: vertical;
+      }
+      .form-help {
+        font-size: 9px;
+        color: var(--dim);
+        margin-top: 5px;
+        line-height: 1.45;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 20px;
+      }
+      .modal-actions .btn {
+        flex: 1;
+      }
+      .choice-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 7px;
+      }
+      .choice {
+        height: 40px;
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        background: var(--surface2);
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .choice.active {
+        border-color: #444444;
+        background: #1a1a1a;
+        color: #fff;
+      }
+      .toast-stack {
+        position: fixed;
+        right: 16px;
+        bottom: 18px;
+        z-index: 300;
+        display: grid;
+        gap: 8px;
+        width: min(360px, calc(100vw - 32px));
+      }
+      .toast {
+        padding: 13px 15px;
+        border-radius: 14px;
+        background: #0a0a0a;
+        border: 1px solid var(--border2);
+        box-shadow: var(--shadow);
+        font-size: 11px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        animation: slide 0.25s var(--ease);
+      }
+      .toast .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-top: 4px;
+        background: var(--accent);
+        flex: none;
+      }
+      .toast.success .dot {
+        background: var(--green);
+      }
+      .toast.error .dot {
+        background: var(--red);
+      }
+      @keyframes slide {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .confirm-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 20px;
+      }
+      .confirm-actions .btn {
+        flex: 1;
+      }
+      .stat-strip {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 16px;
+      }
+      .stat-box {
+        padding: 14px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+      }
+      .stat-box .k {
+        font-size: 9px;
+        color: var(--muted);
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+      .stat-box .v {
+        font-size: 16px;
+        font-weight: 800;
+        margin-top: 5px;
+      }
+      .settings-list {
+        padding: 8px 16px 16px;
+      }
+      .setting {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .setting:last-child {
+        border-bottom: 0;
+      }
+      .setting strong {
+        display: block;
+        font-size: 12px;
+      }
+      .setting span {
+        display: block;
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+      .switch {
+        width: 42px;
+        height: 24px;
+        border-radius: 99px;
+        background: #1f1f1f;
+        padding: 3px;
+        transition: 0.2s;
+      }
+      .switch i {
+        display: block;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #777;
+        transition: 0.2s;
+      }
+      .switch.on {
+        background: rgba(37, 244, 185, 0.22);
+      }
+      .switch.on i {
+        transform: translateX(18px);
+        background: var(--green);
+      }
+      @media (max-width: 760px) {
+        .metrics {
+          grid-template-columns: 1fr 1fr;
+        }
+        .account-grid,
+        .goal-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .daily-main {
+          padding: 24px 20px;
+        }
+        .analytics-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 520px) {
+        .app {
+          padding: 20px 12px;
+        }
+        .top {
+          margin-bottom: 17px;
+        }
+        .brand {
+          font-size: 22px;
+        }
+        .top-actions .btn.export {
+          display: none;
+        }
+        .action-grid {
+          gap: 7px;
+        }
+        .action-tile {
+          height: 70px;
+          font-size: 11px;
+        }
+        .metrics {
+          gap: 7px;
+        }
+        .metric {
+          padding: 13px;
+        }
+        .metric-value {
+          font-size: 17px;
+        }
+        .metric-hint {
+          font-size: 9px;
+        }
+        .tabs {
+          top: 5px;
+        }
+        .tab {
+          font-size: 10px;
+        }
+        .panel-head {
+          padding: 15px;
+        }
+        .panel-body {
+          padding: 15px;
+        }
+        .daily-main {
+          padding: 21px 15px;
+        }
+        .daily-number {
+          font-size: 37px;
+        }
+        .daily-top {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .daily-status {
+          text-align: left;
+        }
+        .daily-stats {
+          gap: 7px;
+        }
+        .mini {
+          padding: 12px;
+        }
+        .mini .v {
+          font-size: 14px;
+        }
+        .account-grid,
+        .goal-grid {
+          grid-template-columns: 1fr;
+          padding: 12px;
+        }
+        .toolbar {
+          padding: 10px;
+        }
+        .toolbar select {
+          flex: 1;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+        .modal {
+          padding: 10px;
+        }
+        .modal-box {
+          padding: 18px;
+        }
+        .choice-grid {
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+        .insights {
+          grid-template-columns: 1fr;
+        }
+        .stat-strip {
+          grid-template-columns: 1fr 1fr;
+        }
+        .stat-strip .stat-box:last-child {
+          grid-column: 1/-1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="top">
+        <div class="brand">expense<span>.</span></div>
+        <div class="top-actions">
+          <button class="btn export" onclick="exportCSV()">Export CSV</button>
+          <button class="icon-btn" title="Settings" onclick="openSettings()">
+  <svg
+    width="17"
+    height="17"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+</button>
+        </div>
+      </header>
+
+      <section class="action-grid">
+        <!-- EXPENSE BUTTON (Arrow pointing up-right) -->
+<button class="action-tile" onclick="openTransaction('expense')">
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M5 19L19 5" />
+    <path d="M11 5h8v8" />
+  </svg>
+  Expense
+</button>
+
+<!-- RECEIVED BUTTON (Arrow pointing down-left) -->
+<button class="action-tile" onclick="openTransaction('income')">
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M5 19L19 5" />
+    <path d="M5 11v8h8" />
+  </svg>
+  Received
+</button>
+        <button class="action-tile primary" onclick="openGoal()">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+          >
+            <path d="M12 5v14M5 12h14" /></svg
+          >Add Goal
+        </button>
+      </section>
+
+      <section class="metrics">
+        <div class="metric">
+          <div class="metric-label">Available Money</div>
+          <div class="metric-value accent" id="totalAvailable">₹0</div>
+          <div class="metric-hint">All accounts combined</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Spent This Month</div>
+          <div class="metric-value" id="monthSpent">₹0</div>
+          <div class="metric-hint">Current month</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Inflow This Month</div>
+          <div class="metric-value green" id="monthInflow">₹0</div>
+          <div class="metric-hint">Money received</div>
+        </div>
+        <div class="metric" onclick="openBudget()">
+          <div class="metric-label">Daily Cap</div>
+          <div class="metric-value" id="dailyCapMetric">₹0</div>
+          <div class="metric-hint">Tap to set / edit</div>
+        </div>
+      </section>
+
+      <nav class="tabs">
+        <button
+          class="tab active"
+          id="tabDashboard"
+          onclick="switchTab('dashboard')"
+        >
+          Dashboard
+        </button>
+        <button class="tab" id="tabAccounts" onclick="switchTab('accounts')">
+          Accounts & Cash
+        </button>
+        <button class="tab" id="tabGoals" onclick="switchTab('goals')">
+          Goals
+        </button>
+        <button class="tab" id="tabHistory" onclick="switchTab('history')">
+          History
+        </button>
+      </nav>
+
+      <main>
+        <section class="view active" id="viewDashboard">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Daily Spending Cap</h2>
+                <p id="dailySubtitle">
+                  Set a daily limit and let expense. pace your spending.
+                </p>
+              </div>
+              <button class="btn" onclick="openBudget()">Edit Cap</button>
+            </div>
+            <div class="daily-main">
+              <div class="daily-top">
+                <div>
+                  <div class="daily-number" id="dailyRemaining">₹0</div>
+                  <div class="daily-label" id="dailyLabel">
+                    Daily budget remaining
+                  </div>
+                </div>
+                <div class="daily-status" id="dailyStatus">
+                  No daily cap set
+                </div>
+              </div>
+              <div class="progress"><i id="dailyBar"></i></div>
+              <div class="daily-stats">
+                <div class="mini">
+                  <div class="k">Spent Today</div>
+                  <div class="v" id="todaySpent">₹0</div>
+                </div>
+                <div class="mini">
+                  <div class="k">Remaining</div>
+                  <div class="v" id="todayRemainingMini">₹0</div>
+                </div>
+                <div class="mini">
+                  <div class="k">Days Left</div>
+                  <div class="v" id="daysLeft">—</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="insights">
+            <div class="insight">
+              <div class="title">Monthly budget remaining</div>
+              <div class="big" id="monthRemaining">₹0</div>
+              <div class="sub" id="monthBudgetHint">
+                Set a monthly cap in Daily Cap settings.
+              </div>
+            </div>
+            <div class="insight">
+              <div class="title">Goal fund</div>
+              <div class="big" id="goalFund">₹0</div>
+              <div class="sub" id="goalFundHint">
+                Surplus and overspending are settled automatically at midnight.
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top: 16px">
+            <div class="panel-head">
+              <div>
+                <h2>Today at a glance</h2>
+                <p id="todayDateLabel"></p>
+              </div>
+              <button class="btn small" onclick="switchTab('history')">
+                View History
+              </button>
+            </div>
+            <div class="stat-strip">
+              <div class="stat-box">
+                <div class="k">Transactions</div>
+                <div class="v" id="todayTxCount">0</div>
+              </div>
+              <div class="stat-box">
+                <div class="k">Average spend</div>
+                <div class="v" id="avgSpend">₹0</div>
+              </div>
+              <div class="stat-box">
+                <div class="k">Auto goal change</div>
+                <div class="v" id="todayGoalChange">Pending</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="viewAccounts">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Liquid Assets & Balances</h2>
+                <p>
+                  Cash, bank and savings balances are updated by transactions.
+                </p>
+              </div>
+              <button class="btn" onclick="openAccount()">
+                Update Balance
+              </button>
+            </div>
+            <div class="account-grid" id="accountGrid"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Money movement</h2>
+                <p>Quick totals across all accounts.</p>
+              </div>
+            </div>
+            <div class="insights" style="padding: 16px">
+              <div class="insight">
+                <div class="title">All-time inflow</div>
+                <div class="big" id="allInflow">₹0</div>
+              </div>
+              <div class="insight">
+                <div class="title">All-time spending</div>
+                <div class="big" id="allSpent">₹0</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="viewGoals">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Buying Goals</h2>
+                <p>Automatic daily savings are applied to your primary goal.</p>
+              </div>
+              <button class="btn" onclick="openGoal()">+ Goal</button>
+            </div>
+            <div class="goal-grid" id="goalList"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>How goal pacing works</h2>
+                <p>
+                  The rule is applied once a day, after the previous day closes.
+                </p>
+              </div>
+            </div>
+            <div
+              class="panel-body"
+              style="font-size: 11px; line-height: 1.7; color: var(--muted)"
+            >
+              Spend <b style="color: #fff">less</b> than your daily cap → the
+              unused amount is added to the primary goal. Spend
+              <b style="color: #fff">more</b> than your daily cap → the excess
+              is deducted from the primary goal. The current day stays live; its
+              final adjustment happens automatically after midnight.
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="viewHistory">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Transaction History</h2>
+                <p>Edit or remove any recorded transaction.</p>
+              </div>
+            </div>
+            <div class="toolbar">
+              <input
+                class="field-inline"
+                id="searchInput"
+                placeholder="Search title, notes or category…"
+                oninput="renderHistory()"
+              />
+              <select
+                class="field-inline"
+                id="typeFilter"
+                onchange="renderHistory()"
+              >
+                <option value="all">All types</option>
+                <option value="expense">Expenses</option>
+                <option value="income">Inflows</option>
+              </select>
+              <select
+                class="field-inline"
+                id="categoryFilter"
+                onchange="renderHistory()"
+              >
+                <option value="all">All categories</option>
+                <option>Food</option>
+                <option>Travel</option>
+                <option>Shopping</option>
+                <option>Education</option>
+                <option>Bills</option>
+                <option>Entertainment</option>
+                <option>Health</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Account</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="historyBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- TRANSACTION MODAL -->
+    <div class="modal" id="txModal" onclick="backdropClose(event, 'txModal')">
+      <div class="modal-box">
+        <div class="modal-head">
+          <div>
+            <h3 id="txModalTitle">Log Expense</h3>
+            <p>Record it once. Balances and caps update automatically.</p>
+          </div>
+          <button class="icon-btn" onclick="closeModal('txModal')">✕</button>
+        </div>
+        <form class="form" onsubmit="saveTransaction(event)">
+          <input type="hidden" id="editTxId" /><input
+            type="hidden"
+            id="txType"
+          />
+          <div class="form-group">
+            <label>Title / source</label
+            ><input
+              class="form-control"
+              id="txTitle"
+              required
+              placeholder="e.g. Lunch, Salary, Pocket Money"
+            />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Amount (₹)</label
+              ><input
+                class="form-control"
+                id="txAmount"
+                type="number"
+                min="0.01"
+                step="0.01"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Date</label
+              ><input class="form-control" id="txDate" type="date" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Account</label
+            ><select class="form-control" id="txAccount">
+              <option value="bank">Bank Account</option>
+              <option value="cash">Cash</option>
+              <option value="savings">Savings Account</option>
+            </select>
+          </div>
+          <div class="form-group" id="categoryGroup">
+            <label>Category</label
+            ><select class="form-control" id="txCategory">
+              <option>Food</option>
+              <option>Travel</option>
+              <option>Shopping</option>
+              <option>Education</option>
+              <option>Bills</option>
+              <option>Entertainment</option>
+              <option>Health</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Notes</label
+            ><textarea
+              class="form-control"
+              id="txNotes"
+              placeholder="Optional note…"
+            ></textarea>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn" onclick="closeModal('txModal')">
+              Cancel</button
+            ><button class="btn primary" type="submit">Save Entry</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- BUDGET MODAL -->
+    <div
+      class="modal"
+      id="budgetModal"
+      onclick="backdropClose(event, 'budgetModal')"
+    >
+      <div class="modal-box">
+        <div class="modal-head">
+          <div>
+            <h3>Set Spending Caps</h3>
+            <p>
+              Your dashboard uses the daily cap. The monthly cap remains a
+              separate spending ceiling.
+            </p>
+          </div>
+          <button class="icon-btn" onclick="closeModal('budgetModal')">
+            ✕
+          </button>
+        </div>
+        <form class="form" onsubmit="saveBudget(event)">
+          <div class="form-group">
+            <label>Daily spending cap (₹)</label
+            ><input
+              class="form-control"
+              id="dailyCapInput"
+              type="number"
+              min="0"
+              step="1"
+              required
+              placeholder="e.g. 300"
+            />
+          </div>
+          <div class="form-group">
+            <label>Monthly spending cap (₹)</label
+            ><input
+              class="form-control"
+              id="monthlyCapInput"
+              type="number"
+              min="0"
+              step="1"
+              placeholder="Optional"
+            />
+          </div>
+          <div class="form-help">
+            Example: daily cap ₹300 and monthly cap ₹9,000. Every expense
+            reduces today's remaining cap and this month's remaining cap.
+          </div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn"
+              onclick="closeModal('budgetModal')"
+            >
+              Cancel</button
+            ><button class="btn primary" type="submit">Save Caps</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- GOAL MODAL -->
+    <div
+      class="modal"
+      id="goalModal"
+      onclick="backdropClose(event, 'goalModal')"
+    >
+      <div class="modal-box">
+        <div class="modal-head">
+          <div>
+            <h3 id="goalModalTitle">New Goal</h3>
+            <p>Choose the goal that receives automatic daily savings.</p>
+          </div>
+          <button class="icon-btn" onclick="closeModal('goalModal')">✕</button>
+        </div>
+        <form class="form" onsubmit="saveGoal(event)">
+          <input type="hidden" id="editGoalId" />
+          <div class="form-group">
+            <label>Goal</label
+            ><input
+              class="form-control"
+              id="goalTitle"
+              required
+              placeholder="e.g. New Headphones"
+            />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Target (₹)</label
+              ><input
+                class="form-control"
+                id="goalTarget"
+                type="number"
+                min="1"
+                step="1"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Starting saved (₹)</label
+              ><input
+                class="form-control"
+                id="goalSaved"
+                type="number"
+                min="0"
+                step="1"
+                value="0"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Automatic daily adjustment</label>
+            <div class="choice-grid">
+              <button
+                type="button"
+                class="choice active"
+                id="goalAutoYes"
+                onclick="setGoalAuto(true)"
+              >
+                Primary goal</button
+              ><button
+                type="button"
+                class="choice"
+                id="goalAutoNo"
+                onclick="setGoalAuto(false)"
+              >
+                Manual only</button
+              ><span></span>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn" onclick="closeModal('goalModal')">
+              Cancel</button
+            ><button class="btn primary" type="submit">Save Goal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ACCOUNT MODAL -->
+    <div
+      class="modal"
+      id="accountModal"
+      onclick="backdropClose(event, 'accountModal')"
+    >
+      <div class="modal-box">
+        <div class="modal-head">
+          <div>
+            <h3>Update Balance</h3>
+            <p>Use this when your real-world balance differs from the app.</p>
+          </div>
+          <button class="icon-btn" onclick="closeModal('accountModal')">
+            ✕
+          </button>
+        </div>
+        <form class="form" onsubmit="saveAccount(event)">
+          <div class="form-group">
+            <label>Account</label
+            ><select class="form-control" id="accountName">
+              <option value="bank">Bank Account</option>
+              <option value="cash">Cash</option>
+              <option value="savings">Savings Account</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Current balance (₹)</label
+            ><input
+              class="form-control"
+              id="accountBalance"
+              type="number"
+              step="0.01"
+              required
+            />
+          </div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn"
+              onclick="closeModal('accountModal')"
+            >
+              Cancel</button
+            ><button class="btn primary" type="submit">Update Balance</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div
+      class="modal"
+      id="settingsModal"
+      onclick="backdropClose(event, 'settingsModal')"
+    >
+      <div class="modal-box">
+        <div class="modal-head">
+          <div>
+            <h3>Settings</h3>
+            <p>Local-only controls for your expense. data.</p>
+          </div>
+          <button class="icon-btn" onclick="closeModal('settingsModal')">
+            ✕
+          </button>
+        </div>
+        <div class="settings-list">
+          <div class="setting">
+            <div>
+              <strong>Automatic midnight settlement</strong
+              ><span
+                >Apply yesterday's surplus/overspend to the primary goal.</span
+              >
+            </div>
+            <button
+              class="switch on"
+              id="autoSettleSwitch"
+              onclick="toggleSetting('autoSettle')"
+            >
+              <i></i>
+            </button>
+          </div>
+          <div class="setting">
+            <div>
+              <strong>Confirm destructive actions</strong
+              ><span>Show a custom confirmation before deleting data.</span>
+            </div>
+            <button
+              class="switch on"
+              id="confirmSwitch"
+              onclick="toggleSetting('confirmDelete')"
+            >
+              <i></i>
+            </button>
+          </div>
+          <div class="setting">
+            <div>
+              <strong>Export / backup</strong
+              ><span>Download all app data as a JSON backup.</span>
+            </div>
+            <button class="btn small" onclick="exportBackup()">Backup</button>
+          </div>
+          <div class="setting">
+            <div>
+              <strong>Reset all data</strong
+              ><span
+                >Clears transactions, goals, accounts and caps from this
+                browser.</span
+              >
+            </div>
+            <button class="btn small danger" onclick="resetAll()">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOM CONFIRM -->
+    <div class="modal" id="confirmModal">
+      <div class="modal-box">
+        <div class="modal-head">
+          <div>
+            <h3 id="confirmTitle">Are you sure?</h3>
+            <p id="confirmText"></p>
+          </div>
+        </div>
+        <div class="confirm-actions">
+          <button class="btn" onclick="resolveConfirm(false)">Cancel</button
+          ><button
+            class="btn primary"
+            id="confirmOk"
+            onclick="resolveConfirm(true)"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="toast-stack" id="toastStack"></div>
+
+    <script>
+      const KEYS = {
+        tx: "expense_os_transactions_v4",
+        goals: "expense_os_goals_v4",
+        accounts: "expense_os_accounts_v4",
+        daily: "expense_os_daily_cap_v4",
+        monthly: "expense_os_monthly_cap_v4",
+        settings: "expense_os_settings_v4",
+        meta: "expense_os_meta_v4",
+      };
+      const defaultAccounts = { bank: 0, cash: 0, savings: 0 };
+      const defaultSettings = { autoSettle: true, confirmDelete: true };
+      let transactions = load(KEYS.tx, []);
+      let goals = load(KEYS.goals, []);
+      let accounts = Object.assign(
+        {},
+        defaultAccounts,
+        load(KEYS.accounts, {}),
+      );
+      let dailyCap = Number(localStorage.getItem(KEYS.daily) || 0);
+      let monthlyCap = Number(localStorage.getItem(KEYS.monthly) || 0);
+      let settings = Object.assign(
+        {},
+        defaultSettings,
+        load(KEYS.settings, {}),
+      );
+      let meta = Object.assign(
+        { lastOpenDate: todayKey() },
+        load(KEYS.meta, {}),
+      );
+      let goalAuto = true;
+      let confirmResolver = null;
+      let midnightTimer = null;
+
+      function load(k, f) {
+        try {
+          return JSON.parse(localStorage.getItem(k)) ?? f;
+        } catch {
+          return f;
+        }
+      }
+      function persist() {
+        localStorage.setItem(KEYS.tx, JSON.stringify(transactions));
+        localStorage.setItem(KEYS.goals, JSON.stringify(goals));
+        localStorage.setItem(KEYS.accounts, JSON.stringify(accounts));
+        localStorage.setItem(KEYS.daily, String(dailyCap));
+        localStorage.setItem(KEYS.monthly, String(monthlyCap));
+        localStorage.setItem(KEYS.settings, JSON.stringify(settings));
+        localStorage.setItem(KEYS.meta, JSON.stringify(meta));
+        render();
+      }
+      function todayKey(d = new Date()) {
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      }
+      function monthKey(d = new Date()) {
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      }
+      function daysInMonth(d = new Date()) {
+        return new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+      }
+      function fmt(n) {
+        return (
+          "₹" +
+          Number(n || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 })
+        );
+      }
+      function esc(v) {
+        return String(v ?? "").replace(
+          /[&<>"']/g,
+          (m) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#039;",
+            })[m],
+        );
+      }
+      function txAmountForDay(key) {
+        return transactions
+          .filter((t) => t.date === key && t.type === "expense")
+          .reduce((s, t) => s + Number(t.amount || 0), 0);
+      }
+      function txForMonth() {
+        const m = monthKey();
+        return transactions.filter((t) => t.date.startsWith(m));
+      }
+      function primaryGoal() {
+        return goals.find((g) => g.auto === true) || goals[0] || null;
+      }
+      function settledDays() {
+        const result = [];
+        const start = new Date();
+        start.setHours(0, 0, 0, 0);
+        const dates = [...new Set(transactions.map((t) => t.date))].sort();
+        dates.forEach((k) => {
+          const d = new Date(k + "T00:00:00");
+          if (d < start && dailyCap > 0) result.push(k);
+        });
+        return result;
+      }
+      function baseGoalSaved(g) {
+        return Number(g.baseSaved ?? g.saved ?? 0);
+      }
+      function settlementForGoal(g) {
+        if (!dailyCap) return 0;
+        let total = 0;
+        settledDays().forEach((day) => {
+          const spent = txAmountForDay(day);
+          total += dailyCap - spent;
+        });
+        return total;
+      }
+      function goalCurrent(g) {
+        return Math.max(0, baseGoalSaved(g) + settlementForGoal(g));
+      }
+      function goalFundTotal() {
+        return goals.reduce((s, g) => s + goalCurrent(g), 0);
+      }
+      function settlementLabelForToday() {
+        if (!dailyCap) return "Set a daily cap first";
+        const spent = txAmountForDay(todayKey()),
+          delta = dailyCap - spent;
+        return delta >= 0
+          ? `+${fmt(delta)} to goal at midnight`
+          : `-${fmt(Math.abs(delta))} from goal at midnight`;
+      }
+      function reconcileGoalSaved() {
+        goals = goals.map((g) =>
+          Object.assign({}, g, { saved: goalCurrent(g) }),
+        );
+      }
+      function applyGoalChangesToStoredValues() {
+        
+      }
+      function openModal(id) {
+        document.getElementById(id).classList.add("show");
+      }
+      function closeModal(id) {
+        document.getElementById(id).classList.remove("show");
+      }
+      function backdropClose(e, id) {
+        if (e.target.id === id) closeModal(id);
+      }
+      function switchTab(tab) {
+        ["dashboard", "accounts", "goals", "history"].forEach((t) => {
+          document
+            .getElementById("view" + cap(t))
+            .classList.toggle("active", t === tab);
+          document
+            .getElementById("tab" + cap(t))
+            .classList.toggle("active", t === tab);
+        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      function cap(s) {
+        return s.charAt(0).toUpperCase() + s.slice(1);
+      }
+      function toast(message, type = "success") {
+        const el = document.createElement("div");
+        el.className = "toast " + type;
+        el.innerHTML = `<i class="dot"></i><div>${esc(message)}</div>`;
+        document.getElementById("toastStack").appendChild(el);
+        setTimeout(() => el.remove(), 3200);
+      }
+      function customConfirm(title, text, ok = "Continue") {
+        return new Promise((resolve) => {
+          confirmResolver = resolve;
+          document.getElementById("confirmTitle").textContent = title;
+          document.getElementById("confirmText").textContent = text;
+          document.getElementById("confirmOk").textContent = ok;
+          openModal("confirmModal");
+        });
+      }
+      function resolveConfirm(value) {
+        closeModal("confirmModal");
+        if (confirmResolver) {
+          const r = confirmResolver;
+          confirmResolver = null;
+          r(value);
+        }
+      }
+
+      function openTransaction(type, id = null) {
+        document.getElementById("editTxId").value = id || "";
+        document.getElementById("txType").value = type;
+        document.getElementById("txModalTitle").textContent = id
+          ? "Edit Entry"
+          : type === "expense"
+            ? "Log Expense"
+            : "Log Inflow";
+        document.getElementById("categoryGroup").style.display =
+          type === "expense" ? "block" : "none";
+        if (id) {
+          const t = transactions.find((x) => x.id === id);
+          if (!t) return;
+          document.getElementById("txTitle").value = t.title;
+          document.getElementById("txAmount").value = t.amount;
+          document.getElementById("txDate").value = t.date;
+          document.getElementById("txAccount").value = t.account;
+          document.getElementById("txCategory").value = t.category || "Other";
+          document.getElementById("txNotes").value = t.notes || "";
+        } else {
+          document.getElementById("txTitle").value = "";
+          document.getElementById("txAmount").value = "";
+          document.getElementById("txDate").value = todayKey();
+          document.getElementById("txAccount").value = "bank";
+          document.getElementById("txCategory").value = "Food";
+          document.getElementById("txNotes").value = "";
+        }
+        openModal("txModal");
+        setTimeout(() => document.getElementById("txTitle").focus(), 80);
+      }
+      function saveTransaction(e) {
+        e.preventDefault();
+        const id = document.getElementById("editTxId").value,
+          type = document.getElementById("txType").value;
+        const title = document.getElementById("txTitle").value.trim(),
+          amount = Number(document.getElementById("txAmount").value);
+        const date = document.getElementById("txDate").value,
+          account = document.getElementById("txAccount").value;
+        const category = document.getElementById("txCategory").value,
+          notes = document.getElementById("txNotes").value.trim();
+        if (!title || amount <= 0 || !date) {
+          toast("Please complete the required fields.", "error");
+          return;
+        }
+        if (id) {
+          const i = transactions.findIndex((t) => t.id === id);
+          if (i < 0) return;
+          const old = transactions[i];
+          accounts[old.account] =
+            (accounts[old.account] || 0) +
+            (old.type === "income" ? -old.amount : old.amount);
+          transactions[i] = {
+            id,
+            type,
+            title,
+            amount,
+            date,
+            account,
+            category,
+            notes,
+          };
+        } else
+          transactions.push({
+            id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
+            type,
+            title,
+            amount,
+            date,
+            account,
+            category,
+            notes,
+          });
+        accounts[account] =
+          (accounts[account] || 0) + (type === "income" ? amount : -amount);
+        persist();
+        closeModal("txModal");
+        toast(id ? "Entry updated" : "Entry saved");
+      }
+      async function deleteTx(id) {
+        const t = transactions.find((x) => x.id === id);
+        if (!t) return;
+        if (
+          settings.confirmDelete &&
+          !(await customConfirm(
+            "Delete this transaction?",
+            `${t.title} · ${fmt(t.amount)} will be removed and all totals recalculated.`,
+            "Delete",
+          ))
+        )
+          return;
+        accounts[t.account] =
+          (accounts[t.account] || 0) +
+          (t.type === "income" ? -t.amount : t.amount);
+        transactions = transactions.filter((x) => x.id !== id);
+        persist();
+        toast("Transaction deleted");
+      }
+
+      function openBudget() {
+        document.getElementById("dailyCapInput").value = dailyCap || "";
+        document.getElementById("monthlyCapInput").value = monthlyCap || "";
+        openModal("budgetModal");
+        setTimeout(() => document.getElementById("dailyCapInput").focus(), 80);
+      }
+      function saveBudget(e) {
+        e.preventDefault();
+        const d = Number(document.getElementById("dailyCapInput").value);
+        const m = Number(document.getElementById("monthlyCapInput").value) || 0;
+        if (d <= 0) {
+          toast("Daily cap must be greater than ₹0.", "error");
+          return;
+        }
+        dailyCap = d;
+        monthlyCap = m;
+        meta.lastOpenDate = todayKey();
+        persist();
+        closeModal("budgetModal");
+        toast("Spending caps updated");
+      }
+
+      function openGoal(id = null) {
+        document.getElementById("editGoalId").value = id || "";
+        document.getElementById("goalModalTitle").textContent = id
+          ? "Edit Goal"
+          : "New Goal";
+        if (id) {
+          const g = goals.find((x) => x.id === id);
+          if (!g) return;
+          document.getElementById("goalTitle").value = g.title;
+          document.getElementById("goalTarget").value = g.target;
+          document.getElementById("goalSaved").value = baseGoalSaved(g);
+          setGoalAuto(g.auto !== false);
+        } else {
+          document.getElementById("goalTitle").value = "";
+          document.getElementById("goalTarget").value = "";
+          document.getElementById("goalSaved").value = "0";
+          setGoalAuto(!goals.length);
+        }
+        openModal("goalModal");
+      }
+      function setGoalAuto(v) {
+        goalAuto = v;
+        document.getElementById("goalAutoYes").classList.toggle("active", v);
+        document.getElementById("goalAutoNo").classList.toggle("active", !v);
+      }
+      function saveGoal(e) {
+        e.preventDefault();
+        const id = document.getElementById("editGoalId").value,
+          title = document.getElementById("goalTitle").value.trim();
+        const target = Number(document.getElementById("goalTarget").value),
+          base = Number(document.getElementById("goalSaved").value) || 0;
+        if (!title || target <= 0) {
+          toast("Enter a goal name and target.", "error");
+          return;
+        }
+        if (id) {
+          const i = goals.findIndex((g) => g.id === id);
+          if (i < 0) return;
+          goals[i] = {
+            ...goals[i],
+            title,
+            target,
+            baseSaved: base,
+            auto: goalAuto,
+          };
+          if (goalAuto)
+            goals = goals.map((g) => (g.id === id ? g : { ...g, auto: false }));
+        } else {
+          if (goalAuto) goals = goals.map((g) => ({ ...g, auto: false }));
+          goals.push({
+            id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
+            title,
+            target,
+            baseSaved: base,
+            saved: base,
+            auto: goalAuto,
+          });
+        }
+        persist();
+        closeModal("goalModal");
+        toast(id ? "Goal updated" : "Goal created");
+      }
+      async function deleteGoal(id) {
+        const g = goals.find((x) => x.id === id);
+        if (!g) return;
+        if (
+          settings.confirmDelete &&
+          !(await customConfirm(
+            "Delete this goal?",
+            `"${g.title}" and its tracked savings will be removed.`,
+            "Delete",
+          ))
+        )
+          return;
+        goals = goals.filter((x) => x.id !== id);
+        persist();
+        toast("Goal deleted");
+      }
+      function makePrimary(id) {
+        goals = goals.map((g) => ({ ...g, auto: g.id === id }));
+        persist();
+        toast("Primary goal updated");
+      }
+
+      function openAccount() {
+        document.getElementById("accountName").value = "bank";
+        document.getElementById("accountBalance").value = accounts.bank || 0;
+        openModal("accountModal");
+      }
+      function saveAccount(e) {
+        e.preventDefault();
+        const n = document.getElementById("accountName").value,
+          b = Number(document.getElementById("accountBalance").value);
+        if (b < 0) {
+          toast("Balance cannot be negative.", "error");
+          return;
+        }
+        accounts[n] = b;
+        persist();
+        closeModal("accountModal");
+        toast("Balance updated");
+      }
+      document
+        .getElementById("accountName")
+        .addEventListener(
+          "change",
+          () =>
+            (document.getElementById("accountBalance").value =
+              accounts[document.getElementById("accountName").value] || 0),
+        );
+
+      function renderHistory() {
+        const q = (
+            document.getElementById("searchInput").value || ""
+          ).toLowerCase(),
+          type = document.getElementById("typeFilter").value,
+          cat = document.getElementById("categoryFilter").value;
+        const list = transactions
+          .filter((t) => {
+            const hay = [t.title, t.notes, t.category, t.account]
+              .join(" ")
+              .toLowerCase();
+            return (
+              hay.includes(q) &&
+              (type === "all" || t.type === type) &&
+              (cat === "all" || (t.type === "expense" && t.category === cat))
+            );
+          })
+          .sort((a, b) => b.date.localeCompare(a.date));
+        const body = document.getElementById("historyBody");
+        if (!list.length) {
+          body.innerHTML = `<tr><td colspan="6"><div class="empty" style="min-height:170px"><div><div class="empty-icon">⌕</div><strong>No records found</strong><span>Try a different search or add your first entry.</span></div></div></td></tr>`;
+          return;
+        }
+        body.innerHTML = list
+          .map(
+            (t) => `<tr>
+    <td>${esc(t.date)}</td>
+    <td><div class="title-cell">${esc(t.title)}</div><div class="sub-cell">${esc(t.notes || "")}</div></td>
+    <td><span class="tag">${esc((t.account || "").toUpperCase())}</span></td>
+    <td><span class="tag">${esc(t.type === "expense" ? t.category : "Inflow")}</span></td>
+    <td class="${t.type === "income" ? "amount-income" : "amount-expense"}">${t.type === "income" ? "+" : "−"}${fmt(t.amount)}</td>
+    <td><button class="btn small" onclick="openTransaction('${t.type}','${t.id}')">Edit</button> <button class="btn small danger" onclick="deleteTx('${t.id}')">Delete</button></td>
+  </tr>`,
+          )
+          .join("");
+      }
+      function render() {
+        const now = new Date(),
+          day = todayKey(),
+          month = monthKey(),
+          monthTx = transactions.filter((t) => t.date.startsWith(month));
+        const spentMonth = monthTx
+          .filter((t) => t.type === "expense")
+          .reduce((s, t) => s + Number(t.amount), 0);
+        const inflowMonth = monthTx
+          .filter((t) => t.type === "income")
+          .reduce((s, t) => s + Number(t.amount), 0);
+        const spentToday = txAmountForDay(day),
+          remaining = dailyCap - spentToday;
+        const total = Object.values(accounts).reduce(
+          (s, v) => s + Number(v || 0),
+          0,
+        );
+        const monthlyRemaining = monthlyCap - spentMonth;
+        const todayTx = transactions.filter((t) => t.date === day);
+        const goal = primaryGoal(),
+          fund = goalFundTotal();
+        document.getElementById("totalAvailable").textContent = fmt(total);
+        document.getElementById("monthSpent").textContent = fmt(spentMonth);
+        document.getElementById("monthInflow").textContent = fmt(inflowMonth);
+        document.getElementById("dailyCapMetric").textContent = fmt(dailyCap);
+        document.getElementById("dailyRemaining").textContent = dailyCap
+          ? fmt(Math.max(0, remaining))
+          : fmt(0);
+        document.getElementById("dailyLabel").textContent =
+          remaining < 0 ? "Daily cap exceeded" : "Daily budget remaining";
+        document.getElementById("dailyStatus").textContent = dailyCap
+          ? remaining >= 0
+            ? `${fmt(remaining)} left today`
+            : `${fmt(Math.abs(remaining))} over today`
+          : "No daily cap set";
+        document.getElementById("todaySpent").textContent = fmt(spentToday);
+        document.getElementById("todayRemainingMini").textContent = dailyCap
+          ? fmt(Math.max(0, remaining))
+          : fmt(0);
+        document.getElementById("daysLeft").textContent =
+          daysInMonth(now) - now.getDate() + 1;
+        document.getElementById("dailySubtitle").textContent = dailyCap
+          ? `Resets automatically at 12:00 AM · ${fmt(dailyCap)} per day`
+          : "Set a daily limit to start tracking your pace.";
+        const pct = dailyCap
+          ? Math.min(100, Math.round((spentToday / dailyCap) * 100))
+          : 0;
+        document.getElementById("dailyBar").style.width = pct + "%";
+        document
+          .getElementById("dailyBar")
+          .classList.toggle("over", spentToday > dailyCap && dailyCap > 0);
+        document.getElementById("monthRemaining").textContent = monthlyCap
+          ? fmt(Math.max(0, monthlyRemaining))
+          : fmt(0);
+        document.getElementById("monthBudgetHint").textContent = monthlyCap
+          ? `${fmt(spentMonth)} spent of ${fmt(monthlyCap)} this month`
+          : "No monthly cap set.";
+        document.getElementById("goalFund").textContent = fmt(fund);
+        document.getElementById("goalFundHint").textContent = goal
+          ? `Primary: ${goal.title} · ${settlementLabelForToday()}`
+          : "Create a goal to receive daily surplus.";
+        document.getElementById("todayDateLabel").textContent =
+          now.toLocaleDateString("en-IN", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+          });
+        document.getElementById("todayTxCount").textContent = todayTx.length;
+        document.getElementById("avgSpend").textContent = fmt(
+          todayTx.length
+            ? spentToday / todayTx.filter((t) => t.type === "expense").length ||
+                0
+            : 0,
+        );
+        document.getElementById("todayGoalChange").textContent = dailyCap
+          ? spentToday <= dailyCap
+            ? `+${fmt(dailyCap - spentToday)}`
+            : `-${fmt(spentToday - dailyCap)}`
+          : "Pending";
+        renderAccounts();
+        renderGoals();
+        renderHistory();
+      }
+      function renderAccounts() {
+        const labels = {
+          bank: "Bank Account",
+          cash: "Cash",
+          savings: "Savings Account",
+        };
+        document.getElementById("accountGrid").innerHTML = Object.entries(
+          accounts,
+        )
+          .map(([k, v]) => {
+            const count = transactions.filter((t) => t.account === k).length;
+            return `<div class="account"><button class="icon-btn edit" onclick="openAccount()" title="Edit">✎</button><div class="name">${labels[k] || k}</div><div class="bal">${fmt(v)}</div><div class="txcount">${count} transaction${count === 1 ? "" : "s"}</div></div>`;
+          })
+          .join("");
+        const allIn = transactions
+            .filter((t) => t.type === "income")
+            .reduce((s, t) => s + t.amount, 0),
+          allOut = transactions
+            .filter((t) => t.type === "expense")
+            .reduce((s, t) => s + t.amount, 0);
+        document.getElementById("allInflow").textContent = fmt(allIn);
+        document.getElementById("allSpent").textContent = fmt(allOut);
+      }
+      function renderGoals() {
+        const el = document.getElementById("goalList");
+        if (!goals.length) {
+          el.innerHTML = `<div class="empty" style="grid-column:1/-1"><div><div class="empty-icon">◎</div><strong>No active goals yet.</strong><span>Create one for something you're saving towards.</span></div></div>`;
+          return;
+        }
+        el.innerHTML = goals
+          .map((g) => {
+            const saved = goalCurrent(g),
+              pct = Math.min(100, Math.round((saved / g.target) * 100));
+            return `<div class="goal">
+      <div class="goal-top"><div><div class="goal-title">${esc(g.title)}</div>${g.auto ? `<div class="goal-primary">Primary · automatic</div>` : `<div class="goal-primary" style="color:var(--dim)">Manual</div>`}</div>
+      <div><button class="icon-btn" onclick="openGoal('${g.id}')" title="Edit">✎</button><button class="icon-btn" onclick="deleteGoal('${g.id}')" title="Delete">×</button></div></div>
+      <div class="goal-amount">${fmt(saved)}</div><div class="goal-target">of ${fmt(g.target)}</div>
+      <div class="progress"><i style="width:${pct}%"></i></div><div class="goal-meta"><span>${pct}% complete</span>${!g.auto ? `<button class="btn small" onclick="makePrimary('${g.id}')">Make primary</button>` : "<span>Auto-adjusts nightly</span>"}</div>
+    </div>`;
+          })
+          .join("");
+      }
+
+      function openSettings() {
+        document
+          .getElementById("autoSettleSwitch")
+          .classList.toggle("on", settings.autoSettle);
+        document
+          .getElementById("confirmSwitch")
+          .classList.toggle("on", settings.confirmDelete);
+        openModal("settingsModal");
+      }
+      function toggleSetting(k) {
+        settings[k] = !settings[k];
+        localStorage.setItem(KEYS.settings, JSON.stringify(settings));
+        openSettings();
+        toast(
+          `${k === "autoSettle" ? "Automatic settlement" : "Delete confirmation"} ${settings[k] ? "enabled" : "disabled"}`,
+        );
+      }
+      function exportCSV() {
+        const rows = [
+          ["Date", "Type", "Title", "Account", "Category", "Amount", "Notes"],
+          ...transactions.map((t) => [
+            t.date,
+            t.type,
+            t.title,
+            t.account,
+            t.category || "Inflow",
+            t.type === "expense" ? -t.amount : t.amount,
+            t.notes || "",
+          ]),
+        ];
+        const csv = rows
+          .map((r) =>
+            r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","),
+          )
+          .join("\n");
+        downloadBlob(csv, "text/csv", `expense-statement-${todayKey()}.csv`);
+        toast("CSV exported");
+      }
+      function exportBackup() {
+        const data = {
+          version: 4,
+          exportedAt: new Date().toISOString(),
+          transactions,
+          goals,
+          accounts,
+          dailyCap,
+          monthlyCap,
+          settings,
+        };
+        downloadBlob(
+          JSON.stringify(data, null, 2),
+          "application/json",
+          `expense-backup-${todayKey()}.json`,
+        );
+        toast("Backup exported");
+      }
+      function downloadBlob(data, type, name) {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([data], { type }));
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 500);
+      }
+      async function resetAll() {
+        if (
+          settings.confirmDelete &&
+          !(await customConfirm(
+            "Reset expense. completely?",
+            "This clears all transactions, goals, accounts and caps from this browser. This cannot be undone.",
+            "Reset everything",
+          ))
+        )
+          return;
+        Object.values(KEYS).forEach((k) => localStorage.removeItem(k));
+        transactions = [];
+        goals = [];
+        accounts = { ...defaultAccounts };
+        dailyCap = 0;
+        monthlyCap = 0;
+        settings = { ...defaultSettings };
+        meta = { lastOpenDate: todayKey() };
+        closeModal("settingsModal");
+        render();
+        toast("All local data has been reset");
+      }
+
+      function migrateOld() {
+        const oldTx = load("expense_os_transactions_v3", null),
+          oldGoals = load("expense_os_goals_v3", null),
+          oldAcc = load("expense_os_accounts_v3", null);
+        const oldBudget = Number(
+          localStorage.getItem("expense_os_monthly_budget_v3") || 0,
+        );
+        if (oldTx && transactions.length === 0) {
+          transactions = oldTx;
+        }
+        if (oldGoals && goals.length === 0) {
+          goals = oldGoals.map((g) => ({
+            ...g,
+            baseSaved: Number(g.saved || 0),
+            auto: false,
+          }));
+        }
+        if (oldAcc && Object.keys(oldAcc).length) {
+          accounts = Object.assign({}, defaultAccounts, oldAcc);
+        }
+        if (oldBudget && !monthlyCap) {
+          monthlyCap = oldBudget;
+          dailyCap = Math.round(oldBudget / daysInMonth());
+        }
+        persist();
+      }
+      function scheduleMidnight() {
+        clearTimeout(midnightTimer);
+        const now = new Date(),
+          next = new Date(now);
+        next.setHours(24, 0, 3, 0);
+        midnightTimer = setTimeout(() => {
+          handleNewDay();
+          scheduleMidnight();
+        }, next - now);
+      }
+      function handleNewDay() {
+        const current = todayKey();
+        if (meta.lastOpenDate !== current) {
+          meta.lastOpenDate = current;
+          persist();
+          if (settings.autoSettle && dailyCap && primaryGoal())
+            toast(
+              "New day started · yesterday's goal adjustment is now included",
+            );
+          else render();
+        } else render();
+      }
+      window.addEventListener("focus", handleNewDay);
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) handleNewDay();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          [
+            "txModal",
+            "budgetModal",
+            "goalModal",
+            "accountModal",
+            "settingsModal",
+            "confirmModal",
+          ].forEach(closeModal);
+        }
+      });
+
+      migrateOld();
+      handleNewDay();
+      render();
+      scheduleMidnight();
+    </script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/sw.js").catch((error) => {
+            console.error("Service worker registration failed", error);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
