@@ -1,4 +1,4 @@
-const CACHE = "expense-pwa-v1";
+const CACHE = "expense-pwa-v2";
 const BASE = self.registration.scope;
 const ASSETS = [
   BASE,
